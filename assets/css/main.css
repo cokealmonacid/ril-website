@@ -1716,9 +1716,20 @@ section,
   color: var(--accent-color);
 }
 
-/*--------------------------------------------------------------
-# Starter Section Section
---------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
+#hero .main-title {
+  text-align: center;
+  margin-bottom: 1em !important;
+}
+
+#hero h2 {
+  font-weight: 500;
+}
+
+.hero-img {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-img img {
+  width: 30vw;
 }
