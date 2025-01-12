@@ -1,0 +1,32 @@
+# Node modules
+/node_modules/
+
+# Build directories
+/dist/
+/build/
+
+# Dependency directories
+/bower_components/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Environment files
+.env
+
+# Coverage directory
+/coverage/
+
+# npm packages
+package-lock.json
+yarn.lock
