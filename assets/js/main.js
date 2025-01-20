@@ -206,4 +206,30 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+  document.getElementById("contactForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    document.querySelector(".loading").style.display = "block";
+
+    const formData = new FormData(this);
+    fetch("contact.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        document.querySelector(".loading").style.display = "none";
+
+        if (data.success) {
+          document.querySelector(".sent-message").style.display = "block";
+        } else {
+          document.querySelector(".error-message").style.display = "block";
+        }
+      })
+      .catch((error) => {
+        document.querySelector(".loading").style.display = "none";
+        document.querySelector(".error-message").style.display = "block";
+      });
+  });
+
 })();
