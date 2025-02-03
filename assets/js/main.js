@@ -206,30 +206,57 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
-  document.getElementById("contactForm").addEventListener("submit", function (event) {
-    event.preventDefault();
 
-    document.querySelector(".loading").style.display = "block";
 
-    const formData = new FormData(this);
-    fetch("contact.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        document.querySelector(".loading").style.display = "none";
+  let form = document.querySelector('.email-form');
+  form.addEventListener('submit', function(e){
+    let thisForm = this;
+    e.preventDefault();
 
-        if (data.success) {
-          document.querySelector(".sent-message").style.display = "block";
-        } else {
-          document.querySelector(".error-message").style.display = "block";
-        }
-      })
-      .catch((error) => {
-        document.querySelector(".loading").style.display = "none";
-        document.querySelector(".error-message").style.display = "block";
-      });
+    let action = thisForm.getAttribute('action');
+    thisForm.querySelector(".loading").classList.add("d-block");
+    thisForm.querySelector('.error-message').classList.remove('d-block');
+    thisForm.querySelector('.sent-message').classList.remove('d-block');
+
+
+    // AGREGAR RECAPTCHA
+
+    let formData = new FormData( thisForm );
+    php_email_form_submit(thisForm, action, formData);
   });
+
+  function php_email_form_submit(thisForm, action, formData) {
+    console.log(thisForm, action, formData);
+    fetch(action, {
+      method: 'POST',
+      body: formData,
+      headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(response => {
+      if( response.ok ) {
+        return response.text();
+      } else {
+        throw new Error(`${response.status} ${response.statusText} ${response.url}`); 
+      }
+    })
+    .then(data => {
+      thisForm.querySelector('.loading').classList.remove('d-block');
+      if (data.trim() == 'OK') {
+        thisForm.querySelector('.sent-message').classList.add('d-block');
+        thisForm.reset(); 
+      } else {
+        throw new Error(data ? data : 'Form submission failed and no error message returned from: ' + action); 
+      }
+    })
+    .catch((error) => {
+      displayError(thisForm, error);
+    });
+  }
+
+  function displayError(thisForm, error) {
+    thisForm.querySelector('.loading').classList.remove('d-block');
+    thisForm.querySelector('.error-message').innerHTML = error;
+    thisForm.querySelector('.error-message').classList.add('d-block');
+  }
 
 })();
